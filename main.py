@@ -27,7 +27,9 @@ def load_credentials(path: str) -> any:
 def get_arguments() -> list:
     # parse arguments
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument("-s", "--sites", type=str, help="Site name")
+    parser.add_argument("-s", "--sites", type=str, help="sites")
+    parser.add_argument("-m", "--site-mapping-path", type=str, help="site mapping path")
+    parser.add_argument("-c", "--credential-path", type=str, help="credential path")
     args = parser.parse_args()
     if "sites" not in args:
         return {}
@@ -37,8 +39,21 @@ def get_arguments() -> list:
     
     # split sites
     sites = args.sites.split()
+
+    # override site_mapping_path if data provided
+    site_mapping_path = ""
+    if "site_mapping_path" in args and args.site_mapping_path is not None:
+        site_mapping_path = args.site_mapping_path
+
+    # override credential_path if data provided
+    credential_path = ""
+    if "credential_path" in args and args.credential_path is not None:
+        credential_path = args.credential_path
+
     return {
-        "sites": sites
+        "sites": sites,
+        "site_mapping_path": site_mapping_path,
+        "credential_path": credential_path
     }
 
 
@@ -85,16 +100,29 @@ def handle_site_flow(driver: WebDriver, url: str, fields: dict, credentials: dic
 
 def main() -> None:
     try:
-        # load site mapping json
-        site_mapping = load_site_mapping(SITE_MAPPING_FILE_PATH)
-        credentials = load_credentials(CREDENTIAL_FILE_PATH)
-
         # parse arguments
         args = get_arguments()
         if "sites" not in args:
             raise Exception("please provide sites argument")
         
         sites = args["sites"]
+
+        # override site_mapping_path if data provided
+        site_mapping_path = SITE_MAPPING_FILE_PATH
+        if args["site_mapping_path"] != "":
+            site_mapping_path = args["site_mapping_path"]
+
+        # override credential_path if data provided
+        credential_path = SITE_MAPPING_FILE_PATH
+        if args["credential_path"] != "":
+            credential_path = args["credential_path"]
+
+
+        # load site mapping json
+        site_mapping = load_site_mapping(site_mapping_path)
+
+        # load credential json
+        credentials = load_credentials(credential_path)
 
         # init chrome browser
         driver = webdriver.Chrome()
