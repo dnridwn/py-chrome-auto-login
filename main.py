@@ -11,7 +11,7 @@ import json
 CREDENTIAL_FILE_PATH = "credentials.json"
 
 # define mapping file path
-SITE_MAPPING_FILE_PATH = "site_mapping.json"
+SITE_MAPPING_FILE_PATH = "site_fields_mapping.json"
 
 # define default wait component timeout
 DEFAULT_WAIT_COMPONENT_TIMEOUT = 20

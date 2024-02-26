@@ -160,4 +160,4 @@ cython_debug/
 #.idea/
 
 /credentials_dev.json
-/site_mapping_dev.json
+/site_fields_mapping_dev.json
