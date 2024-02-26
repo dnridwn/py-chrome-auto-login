@@ -81,6 +81,9 @@ def handle_site_flow(driver: WebDriver, url: str, fields: dict, credentials: dic
         if "find_by" not in field:
             raise Exception("please provide field find_by")
         
+        if field["find_by"] not in [By.ID, By.XPATH, By.LINK_TEXT, By.PARTIAL_LINK_TEXT, By.NAME, By.TAG_NAME, By.CLASS_NAME, By.CSS_SELECTOR]:
+            raise Exception("unsupported find_by value")
+        
         if "identifier" not in field:
             raise Exception("please provide field identifier")
 
